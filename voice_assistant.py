@@ -6,15 +6,18 @@ import requests
 import geocoder
 import threading
 import datetime
+import os
+import dotenv
 from playsound import playsound
-    
+
 engine = pyttsx3.init()
 engine.setProperty('rate', 180)
 recognizer = sr.Recognizer()
 
 #API keys
-NEWS_API_KEY='92955e1923c94b43915cf806abb9d94d'
-OPENWEATHERMAP_API_KEY = '66cfbe7de9eefbd28a060053fcc2449e'
+dotenv.load_dotenv()
+NEWS_API_KEY=os.getenv('NEWS_API_KEY')
+OPENWEATHERMAP_API_KEY = os.getenv('OPENWEATHERMAP_APT_KEY')
 
 # Words
 endwords = ["stop", "end", "bye"]
@@ -109,7 +112,7 @@ def process_query(query):
 					print_and_speak(headline_list[0:-1])
 				speak(f"That is it for today's news {user}")
 	
-			elif 'the time' or 'current time' in query:
+			elif 'the time' in query or 'current time' in query:
 				time = datetime.datetime.now().strftime("%H:%M:%S")
 				speak(f"The time is {time}")
 	
