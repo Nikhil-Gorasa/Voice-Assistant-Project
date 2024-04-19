@@ -7,7 +7,7 @@ import geocoder
 import threading
 import datetime
 from playsound import playsound
-
+    
 engine = pyttsx3.init()
 engine.setProperty('rate', 180)
 recognizer = sr.Recognizer()
@@ -109,7 +109,7 @@ def process_query(query):
 					print_and_speak(headline_list[0:-1])
 				speak(f"That is it for today's news {user}")
 	
-			elif 'the time' in query:
+			elif 'the time' or 'current time' in query:
 				time = datetime.datetime.now().strftime("%H:%M:%S")
 				speak(f"The time is {time}")
 	
@@ -140,7 +140,7 @@ def process_query(query):
 			elif 'fine' in query or 'good' in query:
 				print_and_speak(f"That's great to hear{user}!")
     
-			elif 'thankyou' in query:
+			elif 'thank you' in query:
 				print_and_speak(f"You're welcome {user}! If you have any more questions or need further assistance, feel free to ask. ")
 	   
 			else:
