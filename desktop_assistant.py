@@ -55,7 +55,8 @@ CONFIG = {
 # Initialize Together API client
 dotenv.load_dotenv()
 TOGETHER_API_KEY = os.getenv('TOGETHER_API_KEY', "f15ba22ed0665375913552d87afef7ddef0ba28cfe2ff8976d6ce81e92ad4450")
-client = Together(api_key=TOGETHER_API_KEY)
+client = Together()
+client.api_key = TOGETHER_API_KEY
 
 # Initialize Tesseract
 pytesseract.pytesseract.tesseract_cmd = CONFIG['TESSERACT_CMD']
@@ -436,54 +437,8 @@ class AssistantWindow(QMainWindow):
             return f"Error getting weather: {str(e)}"
             
     def get_llm_response(self, query, use_web_search=False):
-        """Get response from LLM"""
-        try:
-            context_text = ""
-            if use_web_search:
-                search_results = self.web_search(query)
-                if search_results:
-                    context_text = "Based on the following search results:\n"
-                    for result in search_results:
-                        context_text += f"Title: {result['title']}\nSnippet: {result['snippet']}\n\n"
-            
-            prompt = f"""Context: {context_text}
-            Question: {query}
-            Please provide a comprehensive answer based on the context and your knowledge."""
-            
-            # Test Together API connection
-            try:
-                stream = client.chat.completions.create(
-                    model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
-                    messages=[
-                        {"role": "system", "content": "You are Sage, a dynamic and friendly voice assistant designed to assist with a wide range of tasks, from answering questions to performing actions, all through natural conversation. Your primary goal is to provide accurate, insightful, and context-aware responses, drawing on your broad knowledge and adaptability. Whether it's solving problems, offering creative ideas, or handling practical tasks, you engage users with a warm, conversational tone, making complex things simple and fun. As a voice-first companion, you listen carefully, respond thoughtfully, and aim to be the go-to helper for anything a user throws your way! REPLY CONSICISELY AND TO THE POINT."},
-                        {"role": "user", "content": prompt}
-                    ],
-                    stream=True,
-                    max_tokens=500,
-                    temperature=0.7
-                )
-                
-                # Collect the streamed response
-                response_text = ""
-                for chunk in stream:
-                    if chunk.choices[0].delta.content:
-                        response_text += chunk.choices[0].delta.content
-                        # Update the chat display in real-time
-                        self.chat_display.append(chunk.choices[0].delta.content)
-                        self.chat_display.verticalScrollBar().setValue(
-                            self.chat_display.verticalScrollBar().maximum()
-                        )
-                        QApplication.processEvents()  # Ensure UI updates
-                
-                return response_text.strip()
-                
-            except Exception as e:
-                print(f"Together API error: {str(e)}")
-                # Fallback to a simple response
-                return f"I apologize, but I'm having trouble connecting to the AI service. Please try again later. Error: {str(e)}"
-                
-        except Exception as e:
-            return f"Error getting AI response: {str(e)}"
+        """Get response from LLM (temporarily disabled)"""
+        return "I apologize, but the AI service is currently unavailable. Basic voice commands are still working!"
             
     def web_search(self, query, engine='google', max_results=5):
         """Perform web search"""
